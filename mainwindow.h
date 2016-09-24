@@ -1,18 +1,27 @@
+#include <unistd.h>
+#include <QApplication>
+#include <QtGui>
+#include <QLabel>
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-class MainWindow
+class MainWindow : public QWidget
 {
 public:
-  MainWindow(QWidget *parent = 0) : QWidget(parent)
-  {
-    /*
-    mainLayout.addWidget(&myLabel);
+  MainWindow(QWidget *parent = 0) : QWidget(parent){
+    mainLayout.addWidget(&mainBoard);
     setLayout(&mainLayout);
-    draw(1);
-    */
+    drawBoard();
   }
-}
+  void drawBoard();
+
+private:
+  QHBoxLayout mainLayout;
+  QVBoxLayout rightLayout;
+  QLabel mainBoard;
+  QImage backgroundImage;
+};
 
 
 
