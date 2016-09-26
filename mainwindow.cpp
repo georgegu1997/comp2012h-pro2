@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QtGui>
 #include <QLabel>
+#include <iostream>
 #include "mainwindow.h"
 #include "gameboard.h"
 #include "constants.h"
@@ -15,6 +16,7 @@ void MainWindow::drawBoard(int board[][20]) {
   for (i = 0; i < BOARD_WIDTH; i++){
     for(j = 0; j < BOARD_HEIGHT; j++){
       int type = board[i][j];
+      //std::cout << i << "  " << j << "  " << type << std::endl;
       if (type != EMPTY) {
         if(type == RED) {qPainter.setBrush(Qt::red);}
         else if(type == GREEN) {qPainter.setBrush(Qt::green);}

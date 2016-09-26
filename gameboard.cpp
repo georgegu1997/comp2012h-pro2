@@ -2,6 +2,7 @@
 #include "constants.h"
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
 GameBoard::GameBoard() {
   clearBoard();
@@ -12,6 +13,7 @@ void GameBoard::clearBoard() {
   for (i = 0; i < BOARD_WIDTH; i++){
     for(j = 0; j < BOARD_HEIGHT; j++){
       staticBoard[i][j] = EMPTY;
+      board[i][j] = EMPTY;
     };
   };
 }
@@ -33,10 +35,36 @@ void GameBoard::static_board_to_board() {
 
 void GameBoard::add_block_to_board() {
   int type = current_block.type;
-  int i;
+  int i, x, y;
+  std::cout << current_block.center_pos[0] << current_block.center_pos[1] << "  " << std::endl;
 
   static_board_to_board();
 
+  for (i = 0; i < 4; i++){
+    switch (current_block.state) {
+      case UP:
+      x = current_block.center_pos[0]+EXPAND[current_block.type][i][0];
+      y = current_block.center_pos[1]+EXPAND[current_block.type][i][1];
+      break;
+      case LEFT:
+      x = current_block.center_pos[0]-EXPAND[current_block.type][i][1];
+      y = current_block.center_pos[1]+EXPAND[current_block.type][i][0];
+      break;
+      case DOWN:
+      x = current_block.center_pos[0]-EXPAND[current_block.type][i][0];
+      y = current_block.center_pos[1]-EXPAND[current_block.type][i][1];
+      break;
+      case RIGHT:
+      x = current_block.center_pos[0]+EXPAND[current_block.type][i][1];
+      y = current_block.center_pos[1]-EXPAND[current_block.type][i][0];
+      break;
+    }
+    if (x >= 0 && x <= BOARD_WIDTH - 1 && y >= 0 &&  y <= BOARD_HEIGHT - 1) {
+      std::cout << x << "  " << y << std::endl;
+      board[x][y] = type;
+    }
+  }
+/*
   for (i = 0; i < 4; i++){
     switch (current_block.state) {
       case UP:
@@ -53,6 +81,7 @@ void GameBoard::add_block_to_board() {
       break;
     }
   }
+*/
 }
 
 void GameBoard::after_move() {
@@ -74,24 +103,25 @@ void GameBoard::gen_current_block() {
 
 void GameBoard::rotateLeft() {
   switch (current_block.state) {
-    case UP: current_block.state = LEFT; break;
-    case LEFT: current_block.state = DOWN; break;
-    case DOWN: current_block.state = RIGHT; break;
-    case RIGHT: current_block.state = UP; break;
+    case UP: if(check_rotate(LEFT)) return;current_block.state = LEFT; break;
+    case LEFT: if(check_rotate(DOWN)) return;current_block.state = DOWN; break;
+    case DOWN: if(check_rotate(RIGHT)) return;current_block.state = RIGHT; break;
+    case RIGHT: if(check_rotate(UP)) return;current_block.state = UP; break;
   }
   after_move();
 }
 
 void GameBoard::rotateRight() {
   switch (current_block.state) {
-    case UP: current_block.state = RIGHT; break;
-    case RIGHT: current_block.state = DOWN; break;
-    case DOWN: current_block.state = LEFT; break;
-    case LEFT: current_block.state = UP; break;
+    case UP: if(check_rotate(RIGHT)) return;current_block.state = RIGHT; break;
+    case RIGHT: if(check_rotate(DOWN)) return;current_block.state = DOWN; break;
+    case DOWN: if(check_rotate(LEFT)) return;current_block.state = LEFT; break;
+    case LEFT: if(check_rotate(UP)) return;current_block.state = UP; break;
   }
   after_move();
 }
 
+/*
 int GameBoard::check_move(int direction) {
   int result;
   int type = current_block.type;
@@ -106,6 +136,81 @@ int GameBoard::check_move(int direction) {
     case DOWN:
     result = (current_block.center_pos[1]-CONFLICT[type][3+DOWN-state]) <= 0?1:0;
     break;
+  }
+  return result;
+}
+*/
+
+int GameBoard::check_move(int direction) {
+  int i, x, y;
+  int result = 0;
+  int center_x, center_y;
+  center_x = current_block.center_pos[0];
+  center_y = current_block.center_pos[1];
+
+  std::cout << center_x << "  " << center_y << std::endl;
+
+  switch (direction) {
+    case DOWN: center_y--;
+    case LEFT: center_x--;
+    case RIGHT: center_x++;
+  }
+
+  for (i = 0; i < 4; i++){
+    switch (current_block.state) {
+      case UP:
+      x = center_x+EXPAND[current_block.type][i][0];
+      y = center_y+EXPAND[current_block.type][i][1];
+      break;
+      case LEFT:
+      x = center_x-EXPAND[current_block.type][i][1];
+      y = center_y+EXPAND[current_block.type][i][0];
+      break;
+      case DOWN:
+      x = center_x-EXPAND[current_block.type][i][0];
+      y = center_y-EXPAND[current_block.type][i][1];
+      break;
+      case RIGHT:
+      x = center_x+EXPAND[current_block.type][i][1];
+      y = center_y-EXPAND[current_block.type][i][0];
+      break;
+    }
+
+    if (x <= 0 || x >= BOARD_WIDTH || y < 0) {
+      result = 1;
+    }
+  }
+
+  return result;
+}
+
+int GameBoard::check_rotate(int next_state) {
+  int i, x, y;
+  int result = 0;
+
+  for (i = 0; i < 4; i++){
+    switch (next_state) {
+      case UP:
+      x = current_block.center_pos[0]+EXPAND[current_block.type][i][0];
+      y = current_block.center_pos[1]+EXPAND[current_block.type][i][1];
+      break;
+      case LEFT:
+      x = current_block.center_pos[0]-EXPAND[current_block.type][i][1];
+      y = current_block.center_pos[1]+EXPAND[current_block.type][i][0];
+      break;
+      case DOWN:
+      x = current_block.center_pos[0]-EXPAND[current_block.type][i][0];
+      y = current_block.center_pos[1]-EXPAND[current_block.type][i][1];
+      break;
+      case RIGHT:
+      x = current_block.center_pos[0]+EXPAND[current_block.type][i][1];
+      y = current_block.center_pos[1]-EXPAND[current_block.type][i][0];
+      break;
+    }
+    //std::cout << result << std::endl;
+    if (x < 0 || x > BOARD_WIDTH - 1 || y < 0) {
+      result = 1;
+    }
   }
   return result;
 }
