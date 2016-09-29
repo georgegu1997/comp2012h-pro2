@@ -11,6 +11,7 @@ const int FALL_TIME_INIT = 1000;
 const int FALL_TIME_DES = 100;
 
 const int MARK_BASE = 10;
+const int START_LEVEL = 1;
 const int MAX_LEVEL = 10;
 
 enum Type {EMPTY=0,RED=1,GREEN=2,BLUE=3,YELLOW=4,CYAN=5,ORANGE=6,PURPLE=7};
