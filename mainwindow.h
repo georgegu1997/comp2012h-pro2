@@ -1,22 +1,18 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
 #include <unistd.h>
+#include <iostream>
 #include <QApplication>
 #include <QtGui>
 #include <QLabel>
-#include "gameboard.h"
 #include "constants.h"
-
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "gameboard.h"
 
 class MainWindow : public QWidget
 {
 public:
-  MainWindow(QWidget *parent = 0) : QWidget(parent){
-    mainLayout.addWidget(&mainBoard);
-    setLayout(&mainLayout);
-    GameBoard gameBoard;
-    drawBoard(gameBoard.board);
-  }
+  MainWindow(QWidget *parent = 0);
   void drawBoard(int board[][BOARD_HEIGHT]);
   void keyPressEvent(QKeyEvent *event);
 
@@ -25,8 +21,8 @@ private:
   QVBoxLayout rightLayout;
   QLabel mainBoard;
   QImage backgroundImage;
-  GameBoard gameBoard;
   QPainter qPainter;
+  GameBoard *gameBoard;
 };
 
 

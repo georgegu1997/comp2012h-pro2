@@ -1,24 +1,96 @@
-#include "gameboard.h"
-#include "constants.h"
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
 #include <QApplication>
+#include <QObject>
 #include <QTimer>
+#include "gameboard.h"
+#include "mainwindow.h"
 
 GameBoard::GameBoard() {
   current_level = START_LEVEL;
   fall_interval = FALL_TIME_INIT;
   current_block.type = EMPTY;
   next_block.type = EMPTY;
+  score = 0;
   clearBoard();
 }
-/*
-void GameBoard::fall_loop() {
-  QTimer::singleShot(fall_interval, this, SLOT(fall_loop()));
-  moveDown();
+
+void GameBoard::getmainwindow(MainWindow * arg) {
+  mainwindow = arg;
 }
-*/
+
+void GameBoard::main_loop() {
+  int fail = 0;
+  if(check_move(DOWN)) {
+    add_block_to_board(0);
+    fail = check_fail();
+    if (fail == 1) {
+      return;
+    }
+    check_eliminate();
+    gen_current_block();
+  }else {
+    moveDown();
+  }
+
+  QTimer::singleShot(fall_interval, this, SLOT(main_loop()));
+}
+
+void GameBoard::check_eliminate() {
+  int x,y;
+  int eli_start = -1;
+  int eli_rows = 0;
+  int eli;
+  for (y = 0; y < BOARD_HEIGHT; y++) {
+    eli = 1;
+
+    for(x = 0; x < BOARD_WIDTH; x++) {
+      if (staticBoard[x][y] == EMPTY){
+        eli = 0;
+      }
+    }
+
+    if (eli == 1) {
+      if (eli_start<0){
+        eli_start = y;
+      }
+      eli_rows ++;
+    }
+  }
+
+  if (eli_start >= 0){
+    eliminate_rows(eli_start, eli_rows);
+  }
+}
+
+void GameBoard::eliminate_rows(int eli_start, int eli_rows) {
+  int x, y;
+  for (y = eli_start; y < BOARD_HEIGHT; y++){
+    for (x = 0; x < BOARD_WIDTH; x++) {
+      if (y + eli_rows < BOARD_HEIGHT){
+        staticBoard[x][y] = staticBoard[x][y+eli_rows];
+      }else {
+        staticBoard[x][y] = EMPTY;
+      }
+    }
+  }
+}
+
+int GameBoard::check_fail() {
+  int x, y;
+  int fail = 0;
+  for (y = BOARD_HEIGHT-FAIL_ROWS; y < BOARD_HEIGHT; y++) {
+    for (x = 0; x < BOARD_WIDTH; x++) {
+      //std::cout <<x<<" "<<y<<" "<<staticBoard[x][y]<< std::endl;
+      if(staticBoard[x][y] != EMPTY) {
+        fail = 1;
+      }
+    }
+  }
+  return fail;
+}
+
 void GameBoard::clearBoard() {
   int i, j;
   for (i = 0; i < BOARD_WIDTH; i++){
@@ -33,7 +105,7 @@ void GameBoard::game_start() {
   clearBoard();
   gen_rand_block();
   gen_current_block();
-  //GameBoard::fall_loop();
+  main_loop();
 }
 
 void GameBoard::static_board_to_board() {
@@ -45,7 +117,7 @@ void GameBoard::static_board_to_board() {
   };
 }
 
-void GameBoard::add_block_to_board() {
+void GameBoard::add_block_to_board(int board_type = 1) {
   int type = current_block.type;
   int i, x, y, rel_x, rel_y;
   int center_x = current_block.center_pos[0];
@@ -61,13 +133,18 @@ void GameBoard::add_block_to_board() {
 
     if (x >= 0 && x <= BOARD_WIDTH - 1 && y >= 0 &&  y <= BOARD_HEIGHT - 1) {
       //std::cout << x << "  " << y << std::endl;
-      board[x][y] = type;
+      if (board_type == 1) {
+        board[x][y] = type;
+      }else if (board_type == 0) {
+        staticBoard[x][y] = type;
+      }
     }
   }
 }
 
 void GameBoard::after_move() {
   add_block_to_board();
+  mainwindow->drawBoard(board);
 }
 
 void GameBoard::gen_rand_block() {
@@ -127,15 +204,12 @@ void GameBoard::moveDown() {
 }
 
 int GameBoard::check_move(int direction) {
-  int i, rel_x, rel_y;
+  int i, x, y, rel_x, rel_y;
   int result = 0;
-  //result == 0:no collide with other square
-  //result == 1: collide with other square
-  //result == 2: touch to the bottom
   int center_x = current_block.center_pos[0];
   int center_y = current_block.center_pos[1];
 
-  //std::cout << center_x << "  " << center_y << std::endl;
+  //std::cout << center_x << "  " << center_y << current_block.type << std::endl;
 
   switch (direction) {
     case DOWN: center_y--;break;
@@ -149,7 +223,7 @@ int GameBoard::check_move(int direction) {
     get_square_pos(x, y, center_x, center_y, rel_x, rel_y, current_block.state);
     //std::cout << "square position:" << x << " " << y << std::endl;
 
-    if (x < 0 || x > BOARD_WIDTH -1  || y < 0 || staticBoard[x][y] != EMPTY) {
+    if (x < 0 || x > BOARD_WIDTH -1  || y < 0 || (y<BOARD_HEIGHT && staticBoard[x][y] != EMPTY)) {
       result = 1;
     }
   }
@@ -167,8 +241,7 @@ int GameBoard::check_rotate(int next_state) {
     rel_x = EXPAND[current_block.type][i][0];
     rel_y = EXPAND[current_block.type][i][1];
     get_square_pos(x, y, center_x, center_y, rel_x, rel_y, next_state);
-    //std::cout << result << std::endl;
-    if (x < 0 || x > BOARD_WIDTH -1  || y < 0 || staticBoard[x][y] != EMPTY) {
+    if (x < 0 || x > BOARD_WIDTH -1  || y < 0 || (y<BOARD_HEIGHT && staticBoard[x][y] != EMPTY)) {
       result = 1;
     }
   }

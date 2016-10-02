@@ -14,6 +14,8 @@ const int MARK_BASE = 10;
 const int START_LEVEL = 1;
 const int MAX_LEVEL = 10;
 
+const int FAIL_ROWS = 2;
+
 enum Type {EMPTY=0,RED=1,GREEN=2,BLUE=3,YELLOW=4,CYAN=5,ORANGE=6,PURPLE=7};
 enum State {UP=0,LEFT=1,DOWN=2,RIGHT=3};
 
@@ -28,17 +30,6 @@ const int EXPAND[8][4][2] {
   {{0,0},{0,1},{0,-1},{1,-1}},
   {{0,0},{0,1},{0,-1},{-1,-1}},
   {{0,0},{1,0},{0,1},{-1,0}}
-};
-
-const int CONFLICT[8][7] {
-  {0,0,0,0,0,0,0},
-  {0,1,0,2,0,1,0},
-  {1,1,0,0,1,1,0},
-  {0,1,1,1,0,1,1},
-  {0,1,1,1,0,1,1},
-  {0,1,1,1,0,1,1},
-  {1,1,0,1,1,1,0},
-  {1,0,1,1,1,0,1}
 };
 
 #endif

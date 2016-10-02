@@ -5,7 +5,15 @@
 #include <iostream>
 #include "mainwindow.h"
 #include "gameboard.h"
-#include "constants.h"
+
+
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
+  mainLayout.addWidget(&mainBoard);
+  setLayout(&mainLayout);
+  gameBoard = new GameBoard();
+  gameBoard->getmainwindow(this);
+  drawBoard(gameBoard->board);
+}
 
 void MainWindow::drawBoard(int board[][20]) {
   int i, j;
@@ -37,22 +45,22 @@ void MainWindow::drawBoard(int board[][20]) {
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
   if(event->key() == Qt::Key_Left){
-    gameBoard.moveLeft();
-    drawBoard(gameBoard.board);
+    gameBoard->moveLeft();
+    //drawBoard(gameBoard.board);
   }else if(event->key() == Qt::Key_Right){
-    gameBoard.moveRight();
-    drawBoard(gameBoard.board);
+    gameBoard->moveRight();
+    //drawBoard(gameBoard.board);
   }else if(event->key() == Qt::Key_Up){
-    gameBoard.game_start();
-    drawBoard(gameBoard.board);
+    gameBoard->game_start();
+    //drawBoard(gameBoard.board);
   }else if(event->key() == Qt::Key_Down) {
-    gameBoard.moveDown();
-    drawBoard(gameBoard.board);
+    gameBoard->moveDown();
+    //drawBoard(gameBoard.board);
   }else if(event->key() == Qt::Key_Z) {
-    gameBoard.rotateLeft();
-    drawBoard(gameBoard.board);
+    gameBoard->rotateLeft();
+    //drawBoard(gameBoard.board);
   }else if(event->key() == Qt::Key_X) {
-    gameBoard.rotateRight();
-    drawBoard(gameBoard.board);
+    gameBoard->rotateRight();
+    //drawBoard(gameBoard.board);
   }
 }
