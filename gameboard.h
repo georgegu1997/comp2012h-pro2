@@ -18,6 +18,9 @@ public:
   void rotateRight();
   void game_start();
   int board[BOARD_WIDTH][BOARD_HEIGHT];
+  int get_score();
+  int get_next_type();
+  int get_level();
 public slots:
   void main_loop();
 private:

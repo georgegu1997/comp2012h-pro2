@@ -15,11 +15,14 @@ public:
   MainWindow(QWidget *parent = 0);
   void drawBoard(int board[][BOARD_HEIGHT]);
   void keyPressEvent(QKeyEvent *event);
+  void drawPreview(int type);
 
 private:
   QHBoxLayout mainLayout;
   QVBoxLayout rightLayout;
   QLabel mainBoard;
+  QLabel preview_board;
+  QLabel score_board;
   QImage backgroundImage;
   QPainter qPainter;
   GameBoard *gameBoard;

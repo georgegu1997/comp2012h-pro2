@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include <iostream>
 #include <QApplication>
 #include <QObject>
@@ -14,6 +15,18 @@ GameBoard::GameBoard() {
   next_block.type = EMPTY;
   score = 0;
   clearBoard();
+}
+
+int GameBoard::get_score() {
+  return score;
+}
+
+int GameBoard::get_next_type() {
+  return next_block.type;
+}
+
+int GameBoard::get_level() {
+  return current_level;
 }
 
 void GameBoard::getmainwindow(MainWindow * arg) {
@@ -75,6 +88,10 @@ void GameBoard::eliminate_rows(int eli_start, int eli_rows) {
       }
     }
   }
+  score += MARK_BASE * eli_rows * eli_rows;
+  current_level = (int)floor(score/LEVEL_STEP) + START_LEVEL;
+  if (current_level>10) current_level=10;
+  fall_interval = FALL_TIME_INIT - (current_level-1)*FALL_TIME_DES;
 }
 
 int GameBoard::check_fail() {

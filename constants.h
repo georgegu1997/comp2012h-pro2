@@ -12,6 +12,7 @@ const int FALL_TIME_DES = 100;
 
 const int MARK_BASE = 10;
 const int START_LEVEL = 1;
+const int LEVEL_STEP = 100;
 const int MAX_LEVEL = 10;
 
 const int FAIL_ROWS = 2;
