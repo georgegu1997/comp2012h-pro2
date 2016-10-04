@@ -22,7 +22,7 @@ enum State {UP=0,LEFT=1,DOWN=2,RIGHT=3};
 
 const int TYPE_AMOUNT = 7;
 
-const int EXPAND[8][4][2] {
+const int EXPAND[8][4][2] = {
   {{0,0},{0,0},{0,0},{0,0}},
   {{0,2},{0,1},{0,0},{0,-1}},
   {{0,0},{-1,0},{-1,-1},{0,-1}},

@@ -9,11 +9,9 @@
 #include "mainwindow.h"
 
 GameBoard::GameBoard() {
-  current_level = START_LEVEL;
-  fall_interval = FALL_TIME_INIT;
-  current_block.type = EMPTY;
-  next_block.type = EMPTY;
-  score = 0;
+  timer = new QTimer(this);
+  QObject::connect(timer, SIGNAL(timeout()), this, SLOT(main_loop()));
+  init_data();
   clearBoard();
 }
 
@@ -47,7 +45,7 @@ void GameBoard::main_loop() {
     moveDown();
   }
 
-  QTimer::singleShot(fall_interval, this, SLOT(main_loop()));
+  timer->setInterval(fall_interval);
 }
 
 void GameBoard::check_eliminate() {
@@ -119,10 +117,19 @@ void GameBoard::clearBoard() {
 }
 
 void GameBoard::game_start() {
+  init_data();
   clearBoard();
   gen_rand_block();
   gen_current_block();
-  main_loop();
+  timer->start(fall_interval);
+}
+
+void GameBoard::init_data() {
+  current_level = START_LEVEL;
+  fall_interval = FALL_TIME_INIT;
+  current_block.type = EMPTY;
+  next_block.type = EMPTY;
+  score = 0;
 }
 
 void GameBoard::static_board_to_board() {
@@ -136,7 +143,9 @@ void GameBoard::static_board_to_board() {
 
 void GameBoard::add_block_to_board(int board_type = 1) {
   int type = current_block.type;
-  int i, x, y, rel_x, rel_y;
+  int i, rel_x, rel_y;
+  int x = 0;
+  int y = 0;
   int center_x = current_block.center_pos[0];
   int center_y = current_block.center_pos[1];
   //std::cout << current_block.center_pos[0] << current_block.center_pos[1] << "  " << std::endl;
@@ -221,7 +230,9 @@ void GameBoard::moveDown() {
 }
 
 int GameBoard::check_move(int direction) {
-  int i, x, y, rel_x, rel_y;
+  int i, rel_x, rel_y;
+  int x = 0;
+  int y = 0;
   int result = 0;
   int center_x = current_block.center_pos[0];
   int center_y = current_block.center_pos[1];
@@ -249,7 +260,9 @@ int GameBoard::check_move(int direction) {
 }
 
 int GameBoard::check_rotate(int next_state) {
-  int i, x, y, rel_x, rel_y;
+  int i, rel_x, rel_y;
+  int x = 0;
+  int y = 0;
   int result = 0;
   int center_x = current_block.center_pos[0];
   int center_y = current_block.center_pos[1];

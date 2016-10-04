@@ -25,6 +25,7 @@ public slots:
   void main_loop();
 private:
   MainWindow *mainwindow;
+  QTimer *timer;
   int staticBoard[BOARD_WIDTH][BOARD_HEIGHT];
   struct block {
     int center_pos[2];
@@ -37,6 +38,7 @@ private:
   int check_fail();
   void check_eliminate();
   void eliminate_rows(int eli_start, int eli_rows);
+  void init_data();
 
   void clearBoard();
   void gen_rand_block();
