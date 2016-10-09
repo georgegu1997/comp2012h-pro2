@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <iostream>
 #include "mainwindow.h"
-#include "gameboard.h"
+#include "gamecontroller.h"
 
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
@@ -15,10 +15,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
   rightLayout.addWidget(&score_board);
   mainLayout.addLayout(&rightLayout);
   setLayout(&mainLayout);
-  gameBoard = new GameBoard();
-  gameBoard->getmainwindow(this);
-  drawBoard(gameBoard->board);
-  drawPreview(gameBoard->get_next_type());
+  gameController = new GameController();
+  gameController->getmainwindow(this);
+  drawBoard(gameController->board);
+  drawPreview(gameController->get_next_type());
 }
 
 void MainWindow::drawPreview(int type) {
@@ -75,31 +75,25 @@ void MainWindow::drawBoard(int board[][20]) {
   mainBoard.setPixmap(QPixmap::fromImage(backgroundImage));
   mainBoard.show();
 
-  sprintf(score_text, "Level: %d \n Score: %d", gameBoard->get_level(), gameBoard->get_score());
+  sprintf(score_text, "Level: %d \n Score: %d", gameController->get_level(), gameController->get_score());
   score_board.setText(score_text);
 
-  drawPreview(gameBoard->get_next_type());
+  drawPreview(gameController->get_next_type());
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
   if(event->key() == Qt::Key_Left){
-    gameBoard->moveLeft();
-    //drawBoard(gameBoard.board);
+    gameController->moveLeft();
   }else if(event->key() == Qt::Key_Right){
-    gameBoard->moveRight();
-    //drawBoard(gameBoard.board);
+    gameController->moveRight();
   }else if(event->key() == Qt::Key_Up){
-    gameBoard->game_start();
-    //drawBoard(gameBoard.board);
+    gameController->game_start();
   }else if(event->key() == Qt::Key_Down) {
-    gameBoard->moveDown();
-    //drawBoard(gameBoard.board);
+    gameController->moveDown();
   }else if(event->key() == Qt::Key_Z) {
-    gameBoard->rotateLeft();
-    //drawBoard(gameBoard.board);
+    gameController->rotateLeft();
   }else if(event->key() == Qt::Key_X) {
-    gameBoard->rotateRight();
-    //drawBoard(gameBoard.board);
+    gameController->rotateRight();
   }
 }
