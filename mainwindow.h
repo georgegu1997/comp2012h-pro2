@@ -1,3 +1,10 @@
+/*
+This file define the GUI of the game.
+It receive the player inputs and send them to the game controller.
+It also provide a interface to receive data from the controller and update the screen.
+*/
+
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -8,6 +15,8 @@
 #include <QLabel>
 #include "constants.h"
 #include "gamecontroller.h"
+#include "previewboard.h"
+#include "scoreboard.h"
 
 class MainWindow : public QWidget
 {
@@ -15,21 +24,20 @@ public:
   //the constructor constructs the layout of the window.
   //and instantialize the gamecontroller.
   MainWindow(QWidget *parent = 0);
-  //public interface to draw the game board.
-  void drawBoard(int board[][BOARD_HEIGHT]);
   //handling the keypressevent
   void keyPressEvent(QKeyEvent *event);
-  //a public interface to pass the type of next block draw the preview board
-  void drawPreview(int type);
+  //public interface to update all boards.
+  void update(int board[][BOARD_HEIGHT], int next_type, int score, int level);
 
 private:
+  // the layouts
   QHBoxLayout mainLayout;
   QVBoxLayout rightLayout;
-  QLabel mainBoard;
-  QLabel preview_board;
-  QLabel score_board;
-  QImage backgroundImage;
-  QPainter qPainter;
+
+  // the instants of the board classes and game controller.
+  GameBoard gameBoard;
+  PreviewBoard previewBoard;
+  ScoreBoard scoreBoard;
   GameController *gameController;
 };
 

@@ -12,22 +12,10 @@ GameController::GameController() {
   timer = new QTimer(this);
   QObject::connect(timer, SIGNAL(timeout()), this, SLOT(main_loop()));
   init_data();
-  clearBoard();
+  clear_board();
 }
 
-int GameController::get_score() {
-  return score;
-}
-
-int GameController::get_next_type() {
-  return next_block.type;
-}
-
-int GameController::get_level() {
-  return current_level;
-}
-
-void GameController::getmainwindow(MainWindow * arg) {
+void GameController::set_mainwindow(MainWindow * arg) {
   mainwindow = arg;
 }
 
@@ -38,9 +26,11 @@ void GameController::main_loop() {
     fail = check_fail();
     if (fail == 1) {
       return;
+    }else {
+      check_eliminate();
+      gen_current_block();
+      after_move();
     }
-    check_eliminate();
-    gen_current_block();
   }else {
     moveDown();
   }
@@ -106,7 +96,7 @@ int GameController::check_fail() {
   return fail;
 }
 
-void GameController::clearBoard() {
+void GameController::clear_board() {
   int i, j;
   for (i = 0; i < BOARD_WIDTH; i++){
     for(j = 0; j < BOARD_HEIGHT; j++){
@@ -118,7 +108,7 @@ void GameController::clearBoard() {
 
 void GameController::game_start() {
   init_data();
-  clearBoard();
+  clear_board();
   gen_rand_block();
   gen_current_block();
   timer->start(fall_interval);
@@ -170,7 +160,7 @@ void GameController::add_block_to_board(int board_type = 1) {
 
 void GameController::after_move() {
   add_block_to_board();
-  mainwindow->drawBoard(board);
+  mainwindow->update(board, next_block.type, score, current_level);
 }
 
 void GameController::gen_rand_block() {
@@ -186,7 +176,7 @@ void GameController::gen_current_block() {
   gen_rand_block();
 }
 
-void GameController::rotateLeft() {
+void GameController::rotate_left() {
   if (current_block.type == EMPTY) return;
   switch (current_block.state) {
     case UP: if(check_rotate(LEFT)) return;current_block.state = LEFT; break;
@@ -197,7 +187,7 @@ void GameController::rotateLeft() {
   after_move();
 }
 
-void GameController::rotateRight() {
+void GameController::rotate_right() {
   if (current_block.type == EMPTY) return;
   switch (current_block.state) {
     case UP: if(check_rotate(RIGHT)) return;current_block.state = RIGHT; break;
@@ -208,21 +198,21 @@ void GameController::rotateRight() {
   after_move();
 }
 
-void GameController::moveRight() {
+void GameController::move_right() {
   if (current_block.type == EMPTY) return;
   if (check_move(RIGHT)) return;
   current_block.center_pos[0]++;
   after_move();
 }
 
-void GameController::moveLeft() {
+void GameController::move_left() {
   if (current_block.type == EMPTY) return;
   if (check_move(LEFT)) return;
   current_block.center_pos[0]--;
   after_move();
 }
 
-void GameController::moveDown() {
+void GameController::move_down() {
   if (current_block.type == EMPTY) return;
   if (check_move(DOWN)) return;
   current_block.center_pos[1]--;
