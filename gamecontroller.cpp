@@ -167,7 +167,7 @@ void GameController::gen_rand_block() {
   srand((unsigned int)(time(NULL)));
   next_block.type = (rand() % (TYPE_AMOUNT)) + 1;
   next_block.center_pos[0] = BOARD_WIDTH / 2;
-  next_block.center_pos[1] = BOARD_HEIGHT;
+  next_block.center_pos[1] = BOARD_HEIGHT - 2;
   next_block.state = UP;
 }
 

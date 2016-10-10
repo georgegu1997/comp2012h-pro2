@@ -38,8 +38,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
   }else if(event->key() == Qt::Key_Down) {
     gameController->move_down();
   }else if(event->key() == Qt::Key_Z) {
-    gameController->rotate_left();
-  }else if(event->key() == Qt::Key_X) {
     gameController->rotate_right();
+  }else if(event->key() == Qt::Key_X) {
+    gameController->rotate_left();
   }
 }
