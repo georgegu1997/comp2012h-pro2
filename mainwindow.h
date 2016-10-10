@@ -15,6 +15,7 @@ It also provide a interface to receive data from the controller and update the s
 #include <QLabel>
 #include "constants.h"
 #include "gamecontroller.h"
+#include "gameboard.h"
 #include "previewboard.h"
 #include "scoreboard.h"
 
@@ -35,9 +36,9 @@ private:
   QVBoxLayout rightLayout;
 
   // the instants of the board classes and game controller.
-  GameBoard gameBoard;
-  PreviewBoard previewBoard;
-  ScoreBoard scoreBoard;
+  GameBoard *gameBoard;
+  PreviewBoard *previewBoard;
+  ScoreBoard *scoreBoard;
   GameController *gameController;
 };
 

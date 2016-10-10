@@ -9,10 +9,10 @@ public:
   //the constructor only set the level and score to 0.
   ScoreBoard();
   //this function set the level and score, then display them.
-  void set_score_and_level();
+  void set_score_and_level(int, int);
 private:
   int level;
   int score;
-}
+};
 
 #endif

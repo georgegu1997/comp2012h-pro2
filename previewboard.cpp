@@ -19,6 +19,8 @@ void PreviewBoard::set_type(int type){
 
 void PreviewBoard::draw_board() {
   int i, x, y;
+  QImage preview_background(150,200,QImage::Format_RGB32);
+  QPainter preview_painter(&preview_background);
   preview_painter.setBrush(Qt::white);
   preview_painter.drawRect(0,0,150,200);
   preview_painter.setPen(Qt::black);

@@ -22,7 +22,7 @@ private:
 
   QImage preview_background;
   QPainter preview_painter;
-}
+};
 
 
 #endif

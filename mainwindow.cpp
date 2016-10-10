@@ -19,10 +19,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
   setLayout(&mainLayout);
 
   gameController->set_mainwindow(this);
-  drawBoard(gameController->board);
 }
 
-void MainWindow::void update(int board[][BOARD_HEIGHT], int next_type, int score, int level) {
+void MainWindow::update(int board[][BOARD_HEIGHT], int next_type, int score, int level) {
   gameBoard->draw_board(board);
   previewBoard->set_type(next_type);
   scoreBoard->set_score_and_level(score, level);
