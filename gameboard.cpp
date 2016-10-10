@@ -1,4 +1,5 @@
 #include "constants.h"
+#include "gameboard.h"
 
 GameBoard::GameBoard() {
   backgroundImage.load("background.bmp");

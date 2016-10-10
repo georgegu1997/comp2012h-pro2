@@ -5,12 +5,13 @@
 #include <QtGui>
 #include "constants.h"
 
-class GameBoard: public QLabel{
+class GameBoard : public QLabel
+{
 public:
   GameBoard();
   void draw_board(int board[][20]);
 private:
   QImage backgroundImage;
-}
+};
 
 #endif

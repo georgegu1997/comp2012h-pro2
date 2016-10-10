@@ -32,7 +32,7 @@ void GameController::main_loop() {
       after_move();
     }
   }else {
-    moveDown();
+    move_down();
   }
 
   timer->setInterval(fall_interval);
