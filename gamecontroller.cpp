@@ -217,12 +217,17 @@ void GameController::move_left() {
 
 void GameController::move_down() {
   if (current_block.type == EMPTY) return;
-  if (check_move(DOWN)) return;
+  if (check_move(DOWN) == 1) return;
+  if (check_move(DOWN) == 2) {
+    main_loop();
+    timer->start();
+  }
   current_block.center_pos[1]--;
   after_move();
 }
 
 int GameController::check_move(int direction) {
+  if (!timer->isActive()) return 1;
   int i, rel_x, rel_y;
   int x = 0;
   int y = 0;
@@ -245,14 +250,18 @@ int GameController::check_move(int direction) {
     //std::cout << "square position:" << x << " " << y << std::endl;
 
     if (x < 0 || x > BOARD_WIDTH -1  || y < 0 || (y<BOARD_HEIGHT && staticBoard[x][y] != EMPTY)) {
-      result = 1;
+      if (direction == DOWN){
+        return 2;
+      }
+      return 1;
     }
   }
 
-  return result;
+  return 0;
 }
 
 int GameController::check_rotate(int next_state) {
+  if (!timer->isActive()) return 1;
   int i, rel_x, rel_y;
   int x = 0;
   int y = 0;
