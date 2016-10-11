@@ -13,6 +13,7 @@ GameController::GameController() {
   QObject::connect(timer, SIGNAL(timeout()), this, SLOT(main_loop()));
   init_data();
   clear_board();
+  running = 0;
 }
 
 void GameController::set_mainwindow(MainWindow * arg) {
@@ -125,7 +126,7 @@ void GameController::init_data() {
   current_block.type = EMPTY;
   next_block.type = EMPTY;
   score = 0;
-  running = 0;
+  running = 1;
 }
 
 void GameController::static_board_to_board() {
