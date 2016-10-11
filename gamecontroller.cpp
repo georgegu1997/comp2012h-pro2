@@ -25,6 +25,7 @@ void GameController::main_loop() {
     add_block_to_board(0);
     fail = check_fail();
     if (fail == 1) {
+      running = 0;
       timer->stop();
       return;
     }else {
@@ -108,7 +109,8 @@ void GameController::clear_board() {
 }
 
 void GameController::game_start() {
-  if (timer->isActive()) return;
+  //cannot start the game when game is not finished.
+  if (running) return;
   init_data();
   clear_board();
   gen_rand_block();
@@ -123,6 +125,7 @@ void GameController::init_data() {
   current_block.type = EMPTY;
   next_block.type = EMPTY;
   score = 0;
+  running = 0;
 }
 
 void GameController::static_board_to_board() {
@@ -220,18 +223,19 @@ void GameController::move_down() {
   if (check_move(DOWN) == 1) return;
   if (check_move(DOWN) == 2) {
     main_loop();
-    timer->start();
+    return;
   }
   current_block.center_pos[1]--;
   after_move();
 }
 
 int GameController::check_move(int direction) {
-  if (!timer->isActive()) return 1;
+  //cannot move the blcok when the game is not at runnig state.
+  if (!running) return 1;
+
   int i, rel_x, rel_y;
   int x = 0;
   int y = 0;
-  int result = 0;
   int center_x = current_block.center_pos[0];
   int center_y = current_block.center_pos[1];
 
@@ -261,7 +265,9 @@ int GameController::check_move(int direction) {
 }
 
 int GameController::check_rotate(int next_state) {
-  if (!timer->isActive()) return 1;
+  //cannot rotate the blcok when the game is not at runnig state.
+  if (!running) return 1;
+
   int i, rel_x, rel_y;
   int x = 0;
   int y = 0;

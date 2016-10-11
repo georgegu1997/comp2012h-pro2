@@ -46,6 +46,9 @@ private:
   int staticBoard[BOARD_WIDTH][BOARD_HEIGHT];
   int board[BOARD_WIDTH][BOARD_HEIGHT];
 
+  //this is a variables to indicate whether the game is running.
+  int running;
+
   //this is a struct to store the information of the current board and the next board.
   struct block {
     int center_pos[2];
