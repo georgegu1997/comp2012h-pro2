@@ -25,6 +25,7 @@ void GameController::main_loop() {
     add_block_to_board(0);
     fail = check_fail();
     if (fail == 1) {
+      timer->stop();
       return;
     }else {
       check_eliminate();
@@ -107,10 +108,12 @@ void GameController::clear_board() {
 }
 
 void GameController::game_start() {
+  if (timer->isActive()) return;
   init_data();
   clear_board();
   gen_rand_block();
   gen_current_block();
+  after_move();
   timer->start(fall_interval);
 }
 
